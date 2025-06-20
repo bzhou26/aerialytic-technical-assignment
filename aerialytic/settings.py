@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,backend').split(',')
+ALLOWED_HOSTS = str(config('ALLOWED_HOSTS', default='localhost,127.0.0.1,backend')).split(',')
 
 
 # Application definition
@@ -56,7 +56,7 @@ MIDDLEWARE = [
 ]
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000,http://127.0.0.1:3000').split(',')
+CORS_ALLOWED_ORIGINS = str(config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000,http://127.0.0.1:3000')).split(',')
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'aerialytic.wsgi.application'
 # The DATABASE_URL environment variable must be set.
 # Example: DATABASE_URL=postgresql://user:password@host:port/dbname
 DATABASES = {
-    'default': dj_database_url.parse(config('DATABASE_URL'))
+    'default': dj_database_url.parse(str(config('DATABASE_URL')))
 }
 
 
