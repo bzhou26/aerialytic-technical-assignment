@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://backend:8001', // Docker Compose service name and port
+        target: 'http://backend-service:8001', // Docker Compose service name and port
         changeOrigin: true,
         secure: false,
       },

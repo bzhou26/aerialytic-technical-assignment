@@ -16,8 +16,6 @@ show_usage() {
     echo ""
     echo "Commands:"
     echo "  dev       - Start development environment"
-    echo "  prod      - Start production environment"
-    echo "  build     - Build all images"
     echo "  down      - Stop all containers"
     echo "  logs      - Show logs"
     echo "  clean     - Clean up containers and volumes"
@@ -39,26 +37,6 @@ start_dev() {
     docker compose -f docker-compose.yml -f docker-compose.override.yml build --no-cache
     echo -e "${GREEN}Starting development environment...${NC}"
     docker compose -f docker-compose.yml -f docker-compose.override.yml up --build
-}
-
-# Function to start production environment
-start_prod() {
-    echo -e "${GREEN}Building images without cache for production...${NC}"
-    docker compose --profile production build --no-cache
-    echo -e "${GREEN}Starting production environment...${NC}"
-    docker compose --profile production up --build -d
-}
-
-# Function to build images
-build_images() {
-    echo -e "${GREEN}Building all images...${NC}"
-    docker compose build --no-cache
-}
-
-# Function to stop containers
-stop_containers() {
-    echo -e "${YELLOW}Stopping all containers...${NC}"
-    docker compose down
 }
 
 # Function to show logs
@@ -89,6 +67,12 @@ reset_database() {
     fi
 }
 
+# Function to stop containers
+stop_containers() {
+    echo -e "${YELLOW}Stopping all containers...${NC}"
+    docker compose down
+}
+
 # Check Docker
 check_docker
 
@@ -96,12 +80,6 @@ check_docker
 case "${1:-}" in
     "dev")
         start_dev
-        ;;
-    "prod")
-        start_prod
-        ;;
-    "build")
-        build_images
         ;;
     "down")
         stop_containers

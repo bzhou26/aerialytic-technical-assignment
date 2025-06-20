@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  backend:
+  backend-service:
     environment:
       - DEBUG=True
       - SECRET_KEY=dev-secret-key-change-in-production
@@ -13,10 +11,10 @@ services:
       sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8001"
 
-  frontend:
+  frontend-service:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.frontend.dev
+      dockerfile: Dockerfile.frontend
     volumes:
       - ./frontend:/app
       - /app/node_modules

@@ -6,7 +6,7 @@ A fullstack application with Django backend and React TypeScript frontend, fully
 
 ```
 aerialytic-technical-assignment/
-├── aerialytic/          # Django project
+├── aerialytic/         # Django project
 ├── frontend/           # React TypeScript frontend
 ├── manage.py           # Django management script
 ├── requirements.txt    # Python dependencies
@@ -14,8 +14,7 @@ aerialytic-technical-assignment/
 ├── setup.sh            # Environment setup script (pyenv, npm)
 ├── docker-compose.yml  # Docker Compose configuration (includes override)
 ├── Dockerfile.backend  # Django backend Dockerfile
-├── frontend/Dockerfile.frontend # React frontend Dockerfile for production
-├── frontend/Dockerfile.frontend.dev # React development Dockerfile
+├── frontend/Dockerfile.frontend # React frontend Dockerfile
 ├── deploy.sh           # Docker deployment script
 └── README.md           # This file
 ```
@@ -109,14 +108,58 @@ VITE_API_URL=http://localhost:8001
 DATABASE_URL=postgresql://aerialytic_user:aerialytic_password@db:5432/aerialytic
 ```
 
-# Django Settings
-DEBUG=True
-SECRET_KEY=a-good-secret-key-for-local-dev
-ALLOWED_HOSTS=localhost,127.0.0.1
-CORS_ALLOWED_ORIGINS=http://localhost:5174,http://127.0.0.1:5174
-
-# Frontend API URL (dynamic)
-VITE_API_URL=http://localhost:8001
-
-# Database - connects to the db service started with Docker
+## Database - connects to the db service started with Docker
 DATABASE_URL=postgresql://aerialytic_user:aerialytic_password@db:5432/aerialytic
+
+
+# Kubernetes Deployment
+
+### Prerequisites
+- Docker images for frontend and backend are built and pushed to a container registry accessible by your cluster (for Minikube, images are loaded locally).
+- `kubectl` and `minikube` are installed and configured.
+
+### Minikube Configuration
+```
+minikube start
+kubectl config use-context minikube
+```
+
+### New Deployment Script
+```
+chmod +x deploy_k8s.sh
+./deploy_k8s.sh
+
+### Deploy All Services to Kubernetes
+
+```sh
+./deploy_k8s.sh
+```
+This will:
+- Build and load Docker images for backend and frontend into Minikube
+- Deploy the PostgreSQL database, backend, and frontend
+- Wait for the database to be ready before deploying the backend
+- Show the status of all pods and services
+
+### Undeploy All Services from Kubernetes
+
+```sh
+./deploy_k8s.sh undeploy
+```
+This will delete all Kubernetes resources for this project (frontend, backend, and database).
+
+### Scaling Deployments
+To scale the backend or frontend, use:
+```sh
+kubectl scale deployment backend-deployment --replicas=2
+kubectl scale deployment frontend-deployment --replicas=2
+```
+Replace `2` with your desired number of replicas.
+
+### Accessing Services
+- By default, services are exposed via LoadBalancer.
+- To access from your host machine (localhost), run `minikube tunnel`.
+- To expose services to other devices on your local network, you must bind the tunnel to your host's LAN IP. Find your IP with `hostname -I`, then run:
+  ```sh
+  sudo minikube tunnel --bind-address=0.0.0.0
+  ```
+  You can then access the services at `http://<your-lan-ip>:<service-port>`.

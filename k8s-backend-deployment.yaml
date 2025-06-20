@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: aerialytic-backend:latest
+        ports:
+        - containerPort: 8001
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: DEBUG
+            value: "True"
+          - name: SECRET_KEY
+            value: "a-good-secret-key-for-local-dev"
+          - name: ALLOWED_HOSTS
+            value: "*"
+          - name: VITE_API_URL
+            value: "http://localhost:8001"
+          - name: DATABASE_URL
+            value: "postgresql://aerialytic_user:aerialytic_password@postgres:5432/aerialytic"
+          - name: CORS_ALLOW_ALL_ORIGINS
+            value: "True"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 8001
+      targetPort: 8001
+  type: LoadBalancer
