@@ -16,8 +16,20 @@ aerialytic-technical-assignment/
 ├── Dockerfile.backend  # Django backend Dockerfile
 ├── frontend/Dockerfile.frontend # React frontend Dockerfile
 ├── deploy.sh           # Docker deployment script
+├── deploy_k8s.sh       # Kubernetes deployment script
 └── README.md           # This file
 ```
+
+## Documentation
+
+### Solar Calculation Models
+The solar geometry calculations are based on well-established mathematical models. For detailed information about the formulas and models used, see:
+- [Solar Formulas Documentation](aerialytic/pv_modeling/solar_formulas.md) - Comprehensive documentation of mathematical models, including:
+  - Solar position calculations (declination, hour angle, zenith angle, azimuth)
+  - Liu and Jordan model for irradiance on tilted surfaces
+  - Clear Sky model (Ineichen-Perez) for atmospheric effects
+  - Ground slope compensation formulas
+  - Annual energy optimization algorithms
 
 ## Prerequisites
 
@@ -25,6 +37,8 @@ aerialytic-technical-assignment/
 - Node.js 18+
 - npm
 - pyenv & pyenv-virtualenv (for Python environment management)
+- kubectl (for Kubernetes deployment)
+- minikube (for local Kubernetes cluster)
 
 ## Environment Setup (for development, linting, and builds)
 
@@ -72,9 +86,6 @@ All server processes (Django, React, PostgreSQL) are run inside Docker container
 ```bash
 # Build and start all services (development mode)
 ./deploy.sh dev
-
-# For production mode
-./deploy.sh prod
 ```
 
 ### Database Management (Docker)
@@ -112,27 +123,27 @@ DATABASE_URL=postgresql://aerialytic_user:aerialytic_password@db:5432/aerialytic
 DATABASE_URL=postgresql://aerialytic_user:aerialytic_password@db:5432/aerialytic
 
 
-# Kubernetes Deployment
+## Kubernetes Deployment
 
 ### Prerequisites
 - Docker images for frontend and backend are built and pushed to a container registry accessible by your cluster (for Minikube, images are loaded locally).
 - `kubectl` and `minikube` are installed and configured.
 
 ### Minikube Configuration
-```
+```bash
 minikube start
 kubectl config use-context minikube
 ```
 
-### New Deployment Script
-```
+### Deployment Script
+```bash
 chmod +x deploy_k8s.sh
-./deploy_k8s.sh
+```
 
 ### Deploy All Services to Kubernetes
 
-```sh
-./deploy_k8s.sh
+```bash
+./deploy_k8s.sh deploy
 ```
 This will:
 - Build and load Docker images for backend and frontend into Minikube
@@ -142,10 +153,22 @@ This will:
 
 ### Undeploy All Services from Kubernetes
 
-```sh
+```bash
 ./deploy_k8s.sh undeploy
 ```
 This will delete all Kubernetes resources for this project (frontend, backend, and database).
+
+### Usage
+```bash
+# Show usage information
+./deploy_k8s.sh
+
+# Deploy the application
+./deploy_k8s.sh deploy
+
+# Remove the application
+./deploy_k8s.sh undeploy
+```
 
 ### Scaling Deployments
 To scale the backend or frontend, use:
@@ -163,3 +186,80 @@ Replace `2` with your desired number of replicas.
   sudo minikube tunnel --bind-address=0.0.0.0
   ```
   You can then access the services at `http://<your-lan-ip>:<service-port>`.
+
+## TODO
+Due to the time, here are a list of items can be added to the system to improve both user experience and development experience.
+
+### Features to optimize PV modeling
+- [ ] **Weather Data Integration**: Integrate real weather data APIs for more accurate solar calculations
+- [ ] **Historical Data Analysis**: Add functionality to analyze historical solar performance data
+- [ ] **Multiple Panel Types**: Support for different solar panel technologies and specifications
+- [ ] **Shading Analysis**: Implement shading analysis to account for nearby obstacles
+- [ ] **Higher Resolution Solar Data**: Increase solar data resolution from 5° to 1° or 0.5° for more precise calculations
+- [ ] **Machine Learning Models**: Implement ML models to predict solar radiation based on historical patterns
+- [ ] **Real-time Data**: Add real-time solar radiation data from weather APIs
+
+### Features to add for the web application
+- [ ] **Export Functionality**: Allow users to export calculation results to PDF/Excel
+- [ ] **User Authentication**: Add user accounts and save calculation history
+- [ ] **Mobile App**: Develop a mobile application for on-site solar assessments
+- [ ] **Performance Optimization**: Optimize solar calculations for faster response times
+- [ ] **Caching**: Implement caching for frequently requested calculations
+- [ ] **API Rate Limiting**: Add rate limiting to prevent API abuse
+- [ ] **Database Support**: Add database support to the system
+- [ ] **Error Handling**: Improve error handling and user feedback
+- [ ] **Logging**: Add comprehensive logging for debugging and monitoring
+- [ ] **Monitoring**: Add health checks and monitoring endpoints
+- [ ] **Security**: Implement additional security measures (input validation, CORS, etc.)
+
+### Testing & Quality
+- [ ] **Integration Tests**: Add end-to-end integration tests
+- [ ] **Performance Tests**: Add load testing and performance benchmarks
+- [ ] **Frontend Tests**: Add comprehensive frontend tests using Jest and React Testing Library
+- [ ] **Error Boundary Tests**: Add tests for error boundaries and error handling
+- [ ] **Form Validation Tests**: Add tests for form validation and user interactions
+- [ ] **Coverage**: Keep test coverage to >90%
+- [ ] **Code Quality**: Add linting rules and code quality checks
+- [ ] **Documentation**: Add API documentation (Swagger/OpenAPI)
+- [ ] **User Guide**: Create comprehensive user documentation
+
+### Infrastructure & DevOps
+- [ ] **CI/CD Pipeline**: Set up automated testing and deployment pipelines
+- [ ] **Container Registry**: Use a proper container registry instead of local images
+- [ ] **Environment Management**: Add staging and production environment configurations
+- [ ] **Backup Strategy**: Implement database backup and recovery procedures
+- [ ] **SSL/TLS**: Add proper SSL certificates for production deployment
+- [ ] **Auto-scaling**: Add auto-scaling capabilities for Kubernetes deployment
+
+### UI/UX Improvements
+- [ ] **Responsive Design**: Improve mobile responsiveness with Tailwind CSS breakpoints and responsive utilities
+- [ ] **Interactive Maps**: Add interactive map selection for location picking with Leaflet.js and custom Tailwind styling
+- [ ] **Google Maps Integration**: Replace open-source maps with Google Maps API for enhanced location services, street view, and satellite imagery with custom Tailwind CSS styling for map controls and overlays
+- [ ] **Visualizations**: Add charts and graphs for solar data visualization using Chart.js with Tailwind CSS theming
+- [ ] **Internationalization**: Add multi-language support with react-i18next and Tailwind CSS RTL support
+- [ ] **Loading States**: Add skeleton loaders and loading animations using Tailwind CSS animation classes
+- [ ] **Icon Integration**: Integrate heroicons or custom SVG icons with Tailwind CSS sizing and color utilities
+- [ ] **Toast Notifications**: Create toast notification system with Tailwind CSS positioning and animation classes
+
+### Development Environment Improvements
+- [ ] **Hot Reloading**: Configure hot reloading for both frontend and backend development
+- [ ] **Development Tools**: Add development tools like React DevTools and Django Debug Toolbar
+- [ ] **Code Formatting**: Set up Ruff for consistent code formatting
+- [ ] **Pre-commit Hooks**: Add pre-commit hooks for linting and formatting
+- [ ] **IDE Configuration**: Add VS Code settings and extensions recommendations
+- [ ] **Environment Variables**: Set up proper environment variable management for different environments
+- [ ] **Mock Data**: Add mock data generators for development and testing
+- [ ] **Development Scripts**: Add convenient npm scripts for common development tasks
+- [ ] **Debugging Setup**: Configure debugging for both frontend and backend
+- [ ] **Type Checking**: Set up TypeScript strict mode and type checking in CI
+- [ ] **Code Generation**: Add code generators for common patterns (components, models, etc.)
+- [ ] **Documentation Generation**: Set up automatic API documentation generation
+
+### Project Configuration Improvements
+- [ ] **Dependency Management**: Use pyproject.toml for dependency specification and version management
+- [ ] **Development Dependencies**: Separate development dependencies from production dependencies
+- [ ] **Optional Dependencies**: Configure optional dependencies for different deployment scenarios
+- [ ] **Package Metadata**: Define package metadata, classifiers, and project information
+- [ ] **Entry Points**: Configure console scripts and entry points
+- [ ] **Multi-environment**: Support multiple Python versions and environments
+- [ ] **Dependency Locking**: Implement dependency locking for reproducible builds

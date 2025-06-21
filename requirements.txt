@@ -5,3 +5,8 @@ python-decouple==3.8
 Pillow==10.1.0
 psycopg2-binary==2.9.9
 dj-database-url==2.1.0
+pvlib==0.11.2
+pandas==2.2.2
+numpy==2.3.0
+pytest==8.0.0
+pytest-django==4.8.0

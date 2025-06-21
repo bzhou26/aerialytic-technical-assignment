@@ -30,6 +30,8 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
       <a href="/test">Go to Test Page</a>
+      <br />
+      <a href="/solar-geometry">Go to Solar Geometry Page</a>
     </>
   )
 }

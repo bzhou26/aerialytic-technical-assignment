@@ -56,7 +56,7 @@ MIDDLEWARE = [
 ]
 
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = str(config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000,http://127.0.0.1:3000')).split(',')
+CORS_ALLOWED_ORIGINS = str(config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000,http://127.0.0.1:3000,http://frontend-service:3000')).split(',')
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -70,6 +70,15 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
+
+# Allow all origins in development/production for Kubernetes
+if config('CORS_ALLOW_ALL_ORIGINS', default=False, cast=bool):
+    CORS_ALLOW_ALL_ORIGINS = True
+
+# Trust proxy headers for Kubernetes deployment
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'http')
 
 ROOT_URLCONF = 'aerialytic.urls'
 
