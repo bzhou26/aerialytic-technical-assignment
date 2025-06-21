@@ -159,7 +159,9 @@ const SolarGeometry: React.FC = () => {
             />
           </label>
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Submitting...' : 'Submit'}
+        </button>
       </form>
       <div ref={mapRef} style={{ height: '400px', width: '100%', marginBottom: '1em' }} />
       {submitted && (

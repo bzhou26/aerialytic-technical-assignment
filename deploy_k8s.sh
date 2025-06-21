@@ -30,7 +30,7 @@ case "${1}" in
 
         # Build frontend image
         echo -e "${YELLOW}Building frontend image...${NC}"
-        docker build -t aerialytic-frontend:latest -f frontend/Dockerfile.frontend ./frontend
+        docker build -t aerialytic-frontend:latest -f frontend/Dockerfile.frontend.prod ./frontend
 
         # Load images into Minikube
         echo -e "${YELLOW}Loading backend image into Minikube...${NC}"

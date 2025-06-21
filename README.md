@@ -229,7 +229,6 @@ Due to the time, here are a list of items can be added to the system to improve 
 - [ ] **Environment Management**: Add staging and production environment configurations
 - [ ] **Backup Strategy**: Implement database backup and recovery procedures
 - [ ] **SSL/TLS**: Add proper SSL certificates for production deployment
-- [ ] **Load Balancer**: Implement load balancing Nginx for high availability
 - [ ] **Auto-scaling**: Add auto-scaling capabilities for Kubernetes deployment
 
 ### UI/UX Improvements
