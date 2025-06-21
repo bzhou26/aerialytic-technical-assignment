@@ -20,9 +20,10 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 import json
-from .views import test_api_view
+from .views import test_api_view, solar_geometry_api_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/test', test_api_view),
+    path('api/solar-geometry', solar_geometry_api_view),
 ]
