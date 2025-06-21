@@ -20,19 +20,43 @@ def solar_geometry_api_view(request):
     try:
         data = json.loads(request.body)
         
+        # Check for required parameters
+        if 'latitude' not in data:
+            return JsonResponse({'error': 'Missing required parameter: latitude'}, status=400)
+        if 'longitude' not in data:
+            return JsonResponse({'error': 'Missing required parameter: longitude'}, status=400)
+        
         # Validate and normalize latitude (-90 to 90)
-        latitude_raw = float(data.get('latitude'))
+        try:
+            latitude_raw = float(data.get('latitude'))
+        except (TypeError, ValueError):
+            return JsonResponse({'error': 'Invalid latitude value'}, status=400)
+            
         if latitude_raw < -360 or latitude_raw > 360:
             raise ValueError("Latitude must be between -360 and 360")
-        latitude = ((latitude_raw + 90) % 180) - 90  # Normalize to -90 to 90
+        # Normalize latitude to -90 to 90 range
+        if latitude_raw > 90:
+            latitude = 180 - latitude_raw
+        elif latitude_raw < -90:
+            latitude = -180 - latitude_raw
+        else:
+            latitude = latitude_raw
         
         # Validate and normalize longitude (-180 to 180)
-        longitude_raw = float(data.get('longitude'))
+        try:
+            longitude_raw = float(data.get('longitude'))
+        except (TypeError, ValueError):
+            return JsonResponse({'error': 'Invalid longitude value'}, status=400)
+            
         if longitude_raw < -360 or longitude_raw > 360:
             raise ValueError("Longitude must be between -360 and 360")
         longitude = ((longitude_raw + 180) % 360) - 180  # Normalize to -180 to 180
         
-        offset = 0.0 if data.get('offset') is None else float(data.get('offset'))
+        # Handle offset
+        try:
+            offset = 0.0 if data.get('offset') is None else float(data.get('offset'))
+        except (TypeError, ValueError):
+            return JsonResponse({'error': 'Invalid offset value'}, status=400)
         
         # Validate offset (ground slope angle should be reasonable)
         if offset < -90 or offset > 90:
