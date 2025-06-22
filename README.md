@@ -68,22 +68,13 @@ cd frontend
 npm install
 ```
 
-## Testing
-
-The project uses pytest for backend testing. Tests are located in the `aerialytic/tests/` directory.
-
-### Running Tests
-
+You can now use npm scripts for linting, building, etc.:
 ```bash
-# Run all tests
-pytest
-```
+# Lint the frontend code
+npm run lint
 
-### Running Tests in Docker
-
-```bash
-# Run tests in the backend container
-docker compose exec backend pytest
+# Build the frontend for production
+npm run build
 ```
 
 ## Running the Application (Docker Compose)
