@@ -1,16 +1,14 @@
 #!/bin/bash
 
-# Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 echo -e "${BLUE}Aerialytic Docker Deployment${NC}"
 echo ""
 
-# Function to show usage
 show_usage() {
     echo "Usage: $0 [command]"
     echo ""
@@ -23,7 +21,6 @@ show_usage() {
     echo ""
 }
 
-# Function to check if Docker is running
 check_docker() {
     if ! docker info > /dev/null 2>&1; then
         echo -e "${RED}Docker is not running. Please start Docker and try again.${NC}"
@@ -31,7 +28,6 @@ check_docker() {
     fi
 }
 
-# Function to start development environment
 start_dev() {
     echo -e "${GREEN}Building images without cache for development...${NC}"
     docker compose -f docker-compose.yml -f docker-compose.override.yml build --no-cache
@@ -39,20 +35,17 @@ start_dev() {
     docker compose -f docker-compose.yml -f docker-compose.override.yml up --build
 }
 
-# Function to show logs
 show_logs() {
     echo -e "${GREEN}Showing logs...${NC}"
     docker compose logs -f
 }
 
-# Function to clean up
 clean_up() {
     echo -e "${YELLOW}Cleaning up containers and volumes...${NC}"
     docker compose down -v --remove-orphans
     docker system prune -f
 }
 
-# Function to reset database
 reset_database() {
     echo -e "${RED}WARNING: This will delete all database data!${NC}"
     read -p "Are you sure you want to continue? (y/N): " -n 1 -r
@@ -67,16 +60,13 @@ reset_database() {
     fi
 }
 
-# Function to stop containers
 stop_containers() {
     echo -e "${YELLOW}Stopping all containers...${NC}"
     docker compose down
 }
 
-# Check Docker
 check_docker
 
-# Main script logic
 case "${1:-}" in
     "dev")
         start_dev
