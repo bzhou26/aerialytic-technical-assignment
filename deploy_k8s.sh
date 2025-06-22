@@ -10,7 +10,7 @@ show_usage() {
   echo "Usage: $0 [command]"
   echo ""
   echo "Commands:"
-  echo "  deploy   - Build production images, load to Minikube, and deploy all resources"
+  echo "  deploy   - Build images, load to Minikube, and deploy all resources"
   echo "  undeploy - Delete all Kubernetes resources for this project"
   echo ""
 }
@@ -24,9 +24,9 @@ fi
 # Main script logic
 case "${1}" in
     "deploy")
-        # Build backend image (production)
-        echo -e "${YELLOW}Building backend image (production)...${NC}"
-        docker build -t aerialytic-backend:latest -f Dockerfile.backend.prod .
+        # Build backend image
+        echo -e "${YELLOW}Building backend image...${NC}"
+        docker build -t aerialytic-backend:latest -f Dockerfile.backend .
 
         # Build frontend image
         echo -e "${YELLOW}Building frontend image...${NC}"
